@@ -1,31 +1,32 @@
-# ocr_module.py
+"""OCR utilities for images and PDFs."""
+
 from PIL import Image
 import pytesseract
 from pdf2image import convert_from_path
-import io
+from typing import Union
 
-def ocr_image(image_file):
+
+def ocr_image(image_file: Union[str, bytes]) -> str:
+    """Extract text from an image file-like object or path."""
     image = Image.open(image_file)
-    text = pytesseract.image_to_string(image)
-    return text
+    return pytesseract.image_to_string(image)
 
-def ocr_pdf(pdf_file):
-    # Convert PDF to images
+
+def ocr_pdf(pdf_file: Union[str, bytes]) -> str:
+    """Extract text from each page of a PDF."""
     images = convert_from_path(pdf_file)
-    text = ''
-    for img in images:
-        text += pytesseract.image_to_string(img)
-        text += '\n'
-    return text
- # In Spyder, run this block (after running your ocr_module code):
+    return "\n".join(pytesseract.image_to_string(img) for img in images)
 
-from ocr_module import ocr_image
 
-text = ocr_image("PATH/TO/YOUR/IMAGE.png")
-print(text)   # Print output and copy-paste into chat here
+if __name__ == "__main__":
+    import sys
 
-# Now experiment with parsing:
-from parse_module import parse_racecard_text
+    if len(sys.argv) != 2:
+        print("Usage: python ocr_module.py <image_or_pdf>")
+        sys.exit(1)
 
-df = parse_racecard_text(text)
-print(df)     # Or just view in Variable Explorer!
+    path = sys.argv[1]
+    if path.lower().endswith(".pdf"):
+        print(ocr_pdf(path))
+    else:
+        print(ocr_image(path))
