@@ -16,12 +16,7 @@ if uploaded_file:
     else:
         text = ocr_image(uploaded_file)
 
-    st.subheader("Extracted Text")
-    st.text(text[:1000])
-
     df = parse_racecard_text(text)
-    st.subheader("Parsed Racecard")
-    st.dataframe(df)
 
     if not df.empty:
         try:
