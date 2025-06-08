@@ -27,3 +27,5 @@ if uploaded_file:
             st.subheader("Predictions")
             st.dataframe(result)
             st.success(f"Predicted Winner: {result.iloc[0]['horse']}")
+    else:
+        st.warning("Unable to parse racecard text. Please check the input format.")

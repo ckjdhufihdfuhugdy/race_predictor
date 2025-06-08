@@ -16,8 +16,13 @@ _ENCODER_PATHS: Dict[str, Path] = {
 }
 
 
-def _load_encoders() -> Dict[str, joblib.Memory]:
-    return {name: joblib.load(path) for name, path in _ENCODER_PATHS.items() if path.exists()}
+def _load_encoders() -> Dict[str, object]:
+    """Load label encoders from disk if the files exist."""
+    return {
+        name: joblib.load(path)
+        for name, path in _ENCODER_PATHS.items()
+        if path.exists()
+    }
 
 
 def _load_model():
